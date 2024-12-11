@@ -287,7 +287,7 @@
                             <tr>
                                 <td>
                                     <select name="search_plant" required>
-                                        <option value="{% if port == '10001' %}PVC{% elif port == '10000' %}NBR{% endif %}">{% if port == '10001' %}PVC{% elif port == '10000' %}NBR{% endif %}</option>
+                                        <option value="{% if port == '10001' %}PVC{% elif port == '10002' %}NBR{% endif %}">{% if port == '10001' %}PVC{% elif port == '10002' %}NBR{% endif %}</option>
                                     </select>
                                 </td>
                                 <td>
@@ -303,7 +303,7 @@
                                 </td>
                                 <td>
                                     <select name="search_line" required>
-                                        {% if port == '10000' %}
+                                        {% if port == '10002' %}
                                             {% for line in nbr_lines %}
                                                 <option value="{{ line }}" {% if line == search_line %}selected{% endif %}>{{ line }}</option>
                                             {% endfor %}
