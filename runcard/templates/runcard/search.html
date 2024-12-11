@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tìm kiếm</title>
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; {# center #}
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .container {
+            width: 40%;
+            display: flex;
+            justify-content: left;
+            margin: auto;
+            margin-top: 0;
+            background-color: white;
+            border-radius: 10px;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            {#left: 0;#}
+            width: 40%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            height: 90%;
+            overflow-y: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            margin: auto;
+            margin-top: 3.2vh;
+        }
+
+        .close-button {
+            position: fixed;
+            bottom: 8%;
+            left: 50%;
+            font-size: 2vh;
+            transform: translateX(-50%);
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        .close-button:hover {
+            background: #d32f2f;
+        }
+        @media (max-width: 1200px) {
+            body {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+            .body {
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                width: 100%;
+                display: flex;
+                justify-content: left;
+                margin: auto;
+                margin-top: 0;
+                background-color: white;
+                border-radius: 10px;
+            }
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                overflow-y: auto;
+            }
+        }
+    </style>
+    <style>
+        .button-container{
+            width: 96%;
+            background-color: gray;
+            margin: auto;
+            display: flex;
+        }
+        .toggle-button{
+            flex: 1;
+            background: white;
+            color: black;
+            border: none;
+            padding: 0.6vh 1vh;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1.8vh;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+
+        }
+        .toggle-button.active {
+            background: blue;
+            color: white;
+        }
+        .content-div {
+            display: none;
+            text-align: center;
+            background: #f1f1f1;
+            border: 1px solid white;
+            width: 96%;
+            height: 70%;
+            margin: auto;
+        }
+        .content-div:not(.hidden) {
+            display: block;
+        }
+    </style>
+    <style>
+        .runcard-search-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 2vh;
+            text-align: left;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        .runcard-search-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .runcard-search-table tr:first-child td {
+            background-color: #f1f1f1;
+            font-weight: bold;
+        }
+
+        .runcard-search-table select {
+            width: 95%;
+            height: 60%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1.4vh;
+            background-color: #fff;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .runcard-search-table select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .submit-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            text-align: left;
+        }
+        th, td {
+            width: 25%;
+            padding: 3px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-size: 1.8vh;
+        }
+    </style>
+    <style>
+        .value-table {
+            border-collapse: collapse;
+            font-size: 10px;
+            width: 96%;
+            margin-left: 2%;
+            table-layout: fixed;
+        }
+
+        .value-table th, .value-table td {
+            border: 2px solid white;
+            padding: 4px;
+            font-size: 18px;
+            text-align: center;
+            width: 16.6%;
+        }
+
+        .value-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <style>
+        .content {
+            display: none;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 60%;
+        }
+
+        .content:target {
+            display: block;
+        }
+
+        .buttons {
+            margin-bottom: 20px;
+        }
+
+        .buttons a {
+            text-decoration: none;
+            color: white;
+            background-color: #007BFF;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .buttons a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <h1 style="font-size: 3.5vh">Tìm kiếm</h1>
+                <div class="button-container">
+                    <button id="button1" class="toggle-button active" onclick="showDiv('div1', this)">Tìm kiếm Runcard</button>
+                </div>
+                <div id="div1" class="content-div">
+                    <form method="POST" >
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="form1">
+                        <table class="runcard-search-table">
+                            <tr>
+                                <td>Xưởng</td>
+                                <td>Máy</td>
+                                <td>Line</td>
+                                <td>Ngày</td>
+                                <td>Giờ</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select name="search_plant" required>
+                                        <option value="{% if port == '10001' %}PVC{% elif port == '10000' %}NBR{% endif %}">{% if port == '10001' %}PVC{% elif port == '10000' %}NBR{% endif %}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="search_mach" required>
+                                        {% for mach_name in machine_lines_name %}
+                                            {% for short_name in machine_lines_short %}
+                                                {% if forloop.counter == forloop.parentloop.counter %}
+                                                    <option value="{{ mach_name }}" {% if mach_name == search_mach %}selected{% endif %}>{{ short_name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="search_line" required>
+                                        {% if port == '10000' %}
+                                            {% for line in nbr_lines %}
+                                                <option value="{{ line }}" {% if line == search_line %}selected{% endif %}>{{ line }}</option>
+                                            {% endfor %}
+                                        {% elif port == '10001' %}
+                                            {% for line in pvc_lines %}
+                                                <option value="{{ line }}" {% if line == search_line %}selected{% endif %}>{{ line }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="search_date" required>
+                                        {% for date in last_7_days %}
+                                            <option value="{{ date }}" {% if date == search_date %}selected{% endif %}>{{ date }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="search_time" required>
+                                        {% for time in period_times %}
+                                            <option value="{{ time }}" {% if time == search_time %}selected{% endif %}>{{ time }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                        <button type="submit" class="submit-button" style="font-size: 1.7vh">Tìm kiếm</button>
+                    </form>
+                    <div class="barcode-show" style="margin-top: 3vh; width: 100%">
+                        {% if search_plant is not None %}
+                            {% if id_dict_len > 0 %}
+                                {% if id_dict_len == 1 %}
+                                    <div style="width: 78%; margin: auto; background-color: white; border-radius: 20px">
+                                        <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 0px;">
+                                            <div style="width: 50%; text-align: left; margin-top: 15px;">
+                                                <p style="font-size: 2.5vh; margin: 0 0 0 10%;">{{ search_time }} - {{ search_time|add:"1" }}</p>
+                                            </div>
+                                            <div style="width: 50%; text-align: right; margin-top: 0px;">
+                                                <p style="font-size: 4vh; margin: 0 5% 0 0; color: {% if id_dict_len > 0 and search_roll is not None %}green;{% else %}white;{% endif %}">&#10003;</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <img src="data:image/svg+xml;base64,{{ search_barcode }}" alt="Barcode 128" style="width: 83%; height: 10vh; margin: auto; margin-top: 0.2vh; margin-bottom: 0vh;">
+                                        </div>
+                                        <p style="padding-bottom: 20px; font-size: 2.5vh">{{ search_rc }}</p>
+                                    </div>
+                                    <div>
+                                        {% if id_dict_len > 0 and search_roll != '' %}
+                                             <table class="value-table">
+                                                {% for item in search_rc_values %}
+                                                    <tr>
+                                                        <td>{{ item.0 }}</td>
+                                                        <td style="color:{% if item.2 != 'PASS' %}red{% endif %}">{{ item.1 }}</td>
+                                                        <td>{{ item.3 }}</td>
+                                                        <td style="color:{% if item.5 != 'PASS' %}red{% endif %}">{{ item.4 }}</td>
+                                                        <td>{{ item.6 }}</td>
+                                                        <td style="color:{% if item.8 != 'PASS' %}red{% endif %}">{{ item.7 }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </table>
+                                        {% endif %}
+                                    </div>
+                                {% elif id_dict_len > 1 %}
+                                    <div class="buttons">
+                                        {% for wo in search_wo_list %}
+                                            <a href="#content{{ forloop.counter }}">{{ wo }}</a>
+                                        {% endfor %}
+                                    </div>
+                                    {% for id, rc, dt, sr in search_rcs %}
+                                        <div id="content{{ forloop.counter }}" class="content" style="width: 78%; margin: auto; border-radius: 0px; border: solid 1px #f1f1f1">
+                                            <div style="background-color: white; border-radius: 20px">
+                                                <div style="display: flex; justify-content: space-between; width: 100%; margin-top: 0px;">
+                                                    <div style="width: 50%; text-align: left; margin-top: 15px;">
+                                                        <p style="font-size: 2.5vh; margin: 0 0 0 10%;">{{ search_time }} - {{ search_time|add:"1" }}</p>
+                                                    </div>
+                                                    <div style="width: 50%; text-align: right; margin-top: 0px;">
+                                                        <p style="font-size: 4vh; margin: 0 5% 0 0; color: {% if sr != '' %}green;{% else %}white;{% endif %}">&#10003;</p>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <img src="data:image/svg+xml;base64,{{ rc }}" alt="Barcode 128" style="width: 83%; height: 10vh; margin: auto; margin-top: 0.2vh; margin-bottom: 0vh;">
+                                                </div>
+                                                <p style="padding-bottom: 20px; font-size: 2.5vh">{{ id }}</p>
+                                            </div>
+                                            <div>
+                                                {% if sr != '' %}
+                                                     <table class="value-table">
+                                                        {% for item in dt %}
+                                                            <tr>
+                                                                <td>{{ item.0 }}</td>
+                                                                <td style="color:{% if item.2 != 'PASS' %}red{% endif %}">{{ item.1 }}</td>
+                                                                <td>{{ item.3 }}</td>
+                                                                <td style="color:{% if item.5 != 'PASS' %}red{% endif %}">{{ item.4 }}</td>
+                                                                <td>{{ item.6 }}</td>
+                                                                <td style="color:{% if item.8 != 'PASS' %}red{% endif %}">{{ item.7 }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </table>
+                                                {% endif %}
+                                                </div>
+                                            </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% else %}
+                                <p style="padding-top: 20px; font-size: 2vh">未找到 Runcard!</p>
+                                <p style="padding-top: 10px; font-size: 2vh">Không tìm thấy Runcard!</p>
+                            {% endif %}
+                        {% endif %}
+                        <div id="barcodeResult"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="close-button" onclick="window.location.href='barcode'">Close</button>
+        </div>
+    </div>
+</body>
+</html>
