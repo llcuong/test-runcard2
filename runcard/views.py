@@ -43,7 +43,7 @@ def barcodepage(request):
         tomorrow = str((datetime.strptime(current_date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d'))
 
         port = request.META.get('SERVER_PORT')
-        if port == '10002':
+        if port == '10000':
             if not any([plant, mach, time, line]):
                 plant, mach, current_date, time, line = 'NBR', 'VN_GD_NBR1_L01', current_date, current_time, 'A1'
                 return redirect(f'/?plant={plant}&mach={mach}&date={current_date}&time={time}&line={line}&wo=0')
@@ -170,7 +170,7 @@ def barcodepage2(request):
         # print('mach: ', mach)
 
         port = request.META.get('SERVER_PORT')
-        if port == '10002':
+        if port == '10000':
             if not any([plant, mach, time, line]):
                 plant, mach, current_date, time, line = 'NBR', 'VN_GD_NBR1_L01', current_date, current_time, 'A1'
                 return redirect(f'/?plant={plant}&mach={mach}&date={current_date}&time={time}&line={line}&wo=0')
@@ -271,7 +271,7 @@ def search_for_runcard(request):
         last_7_days = [(today_date - timedelta(days=0) - timedelta(days=i)).strftime('%Y-%m-%d') for i in range(7)]
 
         port = request.META.get('SERVER_PORT')
-        if port == '10002':
+        if port == '10000':
             plant = 'NBR'
         if port == '10001':
             plant = 'PVC'
